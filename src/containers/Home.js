@@ -12,22 +12,49 @@ export default function Home(props) {
       if (!props.isAuthenticated) {
         return;
       }
-  
+
       try {
         const notes = await loadNotes();
-        setNotes(notes);
+        console.log(notes.status)
+        setNotes(notes.data);
+        console.log("AQUI  NOTES")
+        console.log(notes)
       } catch (e) {
         alert(e);
       }
-  
+
       setIsLoading(false);
     }
-  
+
     onLoad();
   }, [props.isAuthenticated]);
-  
+
   function loadNotes() {
-    return API.get("notes", "/notes");
+
+    //   API.get("notes", "/notes").then(response => {
+    //    console.log(response)
+    // }).catch(error => {
+    //     console.log(error.response)
+    // });
+
+    let apiName = 'notes';
+    let path = '/notes';
+    let myInit = { // OPTIONAL
+      headers: {}, // OPTIONAL
+      response: true, // OPTIONAL (return the entire Axios response object instead of only response.data)
+      queryStringParameters: {  // OPTIONAL
+        name: 'param'
+      }
+    }
+    // API.get(apiName, path, myInit).then(response => {
+    //   console.log(response)
+    //   console.log(response.data)
+    //   return response.data
+    // }).catch(error => {
+    //   console.log(error.response)
+    // });
+    console.log(API.get("notes", "/notes"))
+    return API.get("notes", "/notes",myInit);
   }
   function renderNotesList(notes) {
     return [{}].concat(notes).map((note, i) =>
@@ -38,14 +65,14 @@ export default function Home(props) {
           </ListGroupItem>
         </LinkContainer>
       ) : (
-        <LinkContainer key="new" to="/notes/new">
-          <ListGroupItem>
-            <h4>
-              <b>{"\uFF0B"}</b> Create a new note
+          <LinkContainer key="new" to="/notes/new">
+            <ListGroupItem>
+              <h4>
+                <b>{"\uFF0B"}</b> Create a new note
             </h4>
-          </ListGroupItem>
-        </LinkContainer>
-      )
+            </ListGroupItem>
+          </LinkContainer>
+        )
     );
   }
 
